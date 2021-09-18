@@ -8,6 +8,11 @@ By: Justin Mabutas
 
 Front-end news application that fetches data from [Free News API](https://free-docs.newscatcherapi.com/#introduction) and displays it on a modern and responsive web application.
 
+## Demos
+
+![Desktop Demo](./README/desktop-demo.gif)
+![Mobile Demo](./README/mobile-demo.gif)
+
 ## Installation
 
 Clone the git repository to your machine.
