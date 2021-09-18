@@ -1,25 +1,79 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Box, Button, makeStyles, TextField } from "@material-ui/core";
+import { COLORS } from "./constants.js";
+import ArticleList from "./components/ArticleList.js";
+import { getArticles } from "./utils/FreeNewsAPI.js";
 
-function App() {
+const useStyles = makeStyles({
+  root: {
+    width: "100%",
+    minHeight: "100vh",
+    backgroundColor: COLORS.background,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    [`@media only screen and (max-height: 1440px) and (max-width: 990px)`]: {
+      flexDirection: "column",
+    },
+  },
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  textField: {
+    "& .MuiInputBase-input.MuiOutlinedInput-input": {
+      backgroundColor: "#f8f8ff",
+      borderRadius: "4px",
+    },
+    margin: "8px",
+  },
+});
+
+const App = () => {
+  const classes = useStyles();
+  const [query, setQuery] = useState("");
+  const [articles, setArticles] = useState([]);
+  const [textField, setTextField] = useState("");
+
+  const queryArticles = async () => {
+    const query = textField;
+    setTextField("");
+    const articles = await getArticles(query);
+    setArticles(articles);
+    setQuery(query.toUpperCase());
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Box className={classes.root}>
+      <Box className={classes.container}>
+        <TextField
+          id="outlined-basic"
+          className={classes.textField}
+          label="Topic"
+          variant="outlined"
+          value={textField}
+          onChange={(e) => setTextField(e.target.value)}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              queryArticles();
+            }
+          }}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={queryArticles}
+          style={{ marginBottom: "8px", backgroundColor: COLORS.button }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          Search News
+        </Button>
+        {query ? <ArticleList query={query} articles={articles} /> : ""}
+      </Box>
+    </Box>
   );
-}
+};
 
 export default App;
